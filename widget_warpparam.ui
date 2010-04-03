@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget_WarpParam</class>
+ <widget class="QWidget" name="Widget_WarpParam">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Skeleton Warping</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="cmbSkeletonWarpAlg"/>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QCheckBox" name="chkHumanLike">
+     <property name="text">
+      <string>Keep the result &quot;Human-Like&quot;</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>chkHumanLike</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Widget_WarpParam</receiver>
+   <slot>slotUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>161</x>
+     <y>139</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cmbSkeletonWarpAlg</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>Widget_WarpParam</receiver>
+   <slot>slotUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>272</x>
+     <y>24</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>288</x>
+     <y>179</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <signal>updated()</signal>
+  <slot>slotUpdated()</slot>
+ </slots>
+</ui>
