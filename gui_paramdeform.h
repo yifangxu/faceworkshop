@@ -35,6 +35,8 @@ private:
 
     vector< cv::Point2i > fittedPointV;
 
+    cv::CascadeClassifier faceCascade;
+
     bool bDeformPic;
 
     void loadImg(Mat& img);

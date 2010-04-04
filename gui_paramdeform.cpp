@@ -13,17 +13,17 @@ GUI_ParamDeform::GUI_ParamDeform(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GUI_ParamDeform)
 {
+    string appPath = QApplication::applicationDirPath().toStdString();
     ui->setupUi(this);
 
     bDeformPic = false;
-    ModelFileAscii mf;
 //     asmModel.readTrainData((appRoot+"data/feret_shape/pts.list").c_str());
     string modelPath;
-    //modelPath = "/home/chenxing/myProj/aamlib-opencv/data/color_asm68.model";
-    modelPath = QApplication::applicationDirPath().toStdString() + "/data/color_asm75_ascii.model";
-    mf.openFile(modelPath.c_str(),"rb");
-    asmModel.loadFromFile(mf);
-    mf.closeFile();
+    modelPath = appPath + "/data/color_asm75_ascii.model";
+    asmModel.load(modelPath);
+
+    string faceCascadePath= appPath + "/data/haarcascade_frontalface_alt.xml";
+    faceCascade.load(faceCascadePath);
 
     ui->viewPic->pointPaint.setShapeInfo(&asmModel.getShapeInfo());
 
@@ -62,9 +62,6 @@ void GUI_ParamDeform::on_actionLoadImg_triggered()
 void GUI_ParamDeform::loadImg(Mat& img)
 {
     oriImg = img;
-    string faceCascadePath="/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml";
-    cv::CascadeClassifier faceCascade;
-    faceCascade.load(faceCascadePath);
     asmModel.fit(oriImg, fitResV, faceCascade, true, 0);
 //    asmModel.showResult(img, fitResult);
 
