@@ -135,6 +135,7 @@ void GUI_ParamDeform::updatePic(){
         warp->gridSize = 10;
         warp->calcDelta();
         newImg = warp->genNewImg(oriImg, 1);
+        delete warp;
     }
     else
         newImg = oriImg;
