@@ -77,15 +77,15 @@ void PointsPaint::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
             painter->setPen(dPen);
             painter->drawEllipse(QPointF(ql[i]), 4.*ratio, 4.*ratio);
         }
-        else if (mirrorPoint == i){
-            dPen.setColor(colorMirrorPen);
-            painter->setPen(dPen);
-            dBrush.setColor(colorMirrorBrush);
-            painter->setBrush(dBrush);
-            painter->drawEllipse(QPointF(ql[i]), 4.*ratio, 4.*ratio);
-            dBrush.setColor(colorBrush);
-            painter->setBrush(dBrush);
-        }
+//        else if (mirrorPoint == i){
+//            dPen.setColor(colorMirrorPen);
+//            painter->setPen(dPen);
+//            dBrush.setColor(colorMirrorBrush);
+//            painter->setBrush(dBrush);
+//            painter->drawEllipse(QPointF(ql[i]), 4.*ratio, 4.*ratio);
+//            dBrush.setColor(colorBrush);
+//            painter->setBrush(dBrush);
+//        }
         else {
             dPen.setColor(colorPen);
             painter->setPen(dPen);
