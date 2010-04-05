@@ -19,7 +19,7 @@ Widget_FaceMorph::Widget_FaceMorph(QWidget *parent) :
     asmModel.load(modelPath);
 
     modelPath = appPath + "/data/color_sam68.model";
-    samModel.load(modelPath);
+    //samModel.load(modelPath);
 
     string faceCascadePath=QApplication::applicationDirPath().toStdString() + "/data/haarcascade_frontalface_alt.xml";
     faceCascade.load(faceCascadePath);

@@ -23,11 +23,24 @@ GUI_VideoCapture::GUI_VideoCapture(QWidget *parent) :
         i++;
     }
     capture.open(0);
+//    while (1){
+//        cv::Mat img;
+//        cv::Mat imgT;
+//        qDebug("Capturing...");
+//        capture>>imgT;
+//        qDebug("Fliping...");
+//        cv::flip(imgT, img, 1);
+//        cv::imshow("i", img);
+//        cv::waitKey(50);
+//    }
+    thread.capture = &capture;
+    connect(&thread, SIGNAL(finished()), this, SLOT(newImageReady()));
     startCapture();
 }
 
 GUI_VideoCapture::~GUI_VideoCapture()
 {
+
     delete ui;
 }
 
@@ -56,30 +69,37 @@ void GUI_VideoCapture::startCapture(){
         ui->graphicsView->setMinimumSize(
                 int(capture.get(CV_CAP_PROP_FRAME_WIDTH)*1.1),
                 int(capture.get(CV_CAP_PROP_FRAME_HEIGHT)*1.1));
-        timerId = startTimer(25);
+        timerId = startTimer(50);
     }
 }
 
 void GUI_VideoCapture::stopCapture(){
     killTimer( timerId );
-    capture.release();
+    thread.stop();
+    //capture.release();
 
     // cvReleaseImage(&frame_copy);
 }
 
 void GUI_VideoCapture::timerEvent(QTimerEvent *event){
-//    qDebug("HEEERRE");
-    cv::Mat imgT;
-    capture>>imgT;
-    cv::flip(imgT, img, 1);
-    gScene.clear();
-    gScene.addPixmap(QPixmap::fromImage(MyImage::fromMat(img)));
-    gScene.update();
+    qDebug("Timer Event!");
+    thread.start();
     /*
     cvReleaseImage(&frame_copy);
     cvReleaseImage(&pCannyGray);
     cvReleaseImage(&gray);*/
     //cvReleaseImage(&frame);
+}
+
+void GUI_VideoCapture::newImageReady()
+{
+    qDebug("Updating...");
+    img = thread.image();
+    gScene.clear();
+    gScene.addPixmap(QPixmap::fromImage(MyImage::fromMat(img)));
+    gScene.update();
+    this->update();
+    qDebug("OK.");
 }
 
 void GUI_VideoCapture::on_cmbCamSelect_currentIndexChanged(int index)

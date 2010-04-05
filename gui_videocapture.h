@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <QGraphicsScene>
+#include <QThread>
+#include <QMutex>
 
 #include "highgui.h"
 using cv::VideoCapture;
@@ -10,6 +12,42 @@ using cv::VideoCapture;
 namespace Ui {
     class GUI_VideoCapture;
 }
+
+class ImgCaptureThread : public QThread {
+    Q_OBJECT
+public:
+    ImgCaptureThread(){ stopped = false; };
+    ~ImgCaptureThread(){};
+
+    cv::Mat & image(){ return img;};
+    VideoCapture *capture;
+
+    void stop(){
+        mutex.lock();
+        capture->release();
+        stopped = true;
+        mutex.unlock();
+    }
+
+protected:
+    void run(){
+        if (!mutex.tryLock())
+            return;
+//        mutex.lock();
+        if (!stopped){
+            cv::Mat imgT;
+            qDebug("Capturing...");
+            (*capture)>>imgT;
+            qDebug("Fliping...");
+            cv::flip(imgT, img, 1);
+        }
+        mutex.unlock();
+    }
+private:
+    cv::Mat img;
+    QMutex mutex;
+    bool stopped;
+};
 
 class GUI_VideoCapture : public QDialog {
     Q_OBJECT
@@ -22,8 +60,10 @@ public:
 
     QGraphicsScene gScene;
 
+    ImgCaptureThread thread;
     cv::Mat img;
-
+public slots:
+    void newImageReady();
 protected:
     virtual void changeEvent( QEvent *e );
     virtual void timerEvent( QTimerEvent *event);
