@@ -69,7 +69,7 @@ void GUI_VideoCapture::startCapture(){
         ui->graphicsView->setMinimumSize(
                 int(capture.get(CV_CAP_PROP_FRAME_WIDTH)*1.1),
                 int(capture.get(CV_CAP_PROP_FRAME_HEIGHT)*1.1));
-        timerId = startTimer(50);
+        timerId = startTimer(100);
     }
 }
 

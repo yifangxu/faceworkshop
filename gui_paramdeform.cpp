@@ -30,6 +30,8 @@ GUI_ParamDeform::GUI_ParamDeform(QWidget *parent) :
     ui->cmbImgWarpAlg->addItem(tr("Piece-Wise Warping"));
     ui->cmbImgWarpAlg->addItem(tr("MLS Rigid"));
     ui->cmbImgWarpAlg->addItem(tr("MLS Similarity"));
+
+    connect(&threadWarp, SIGNAL(finished()), this, SLOT(showWarpRes()));
 }
 
 GUI_ParamDeform::~GUI_ParamDeform()
@@ -133,13 +135,23 @@ void GUI_ParamDeform::updatePic(){
         warp->setDstPoints(newPV);
         warp->alpha = 1;
         warp->gridSize = 10;
-        warp->calcDelta();
-        newImg = warp->genNewImg(oriImg, 1);
-        delete warp;
+
+        if (this->threadWarp.updateWarpPtr(warp)){
+            // Will be deleted by the thread
+            threadWarp.setImage(oriImg);
+            threadWarp.start();
+        }
+        else
+            delete warp;
+//        warp->calcDelta();
+//        newImg = warp->genNewImg(oriImg, 1);
+
+//        delete warp;
     }
-    else
+    else{
         newImg = oriImg;
-    ui->viewPic->setImage(MyImage::fromMat(newImg));
+        ui->viewPic->setImage(MyImage::fromMat(newImg));
+    }
 
 //    projectPListToShapeModel(asmModel, newPV, uPV);
 //    newPV = uPV;
@@ -162,6 +174,11 @@ void GUI_ParamDeform::updatePic(){
 //    }
 //    else
 //        ui->viewPic->setImage(MyImage::fromMat(oriImg));
+}
+
+void GUI_ParamDeform::showWarpRes()
+{
+    ui->viewPic->setImage(MyImage::fromMat(this->threadWarp.getImage()));
 }
 
 void GUI_ParamDeform::on_chkDeform_toggled(bool checked)
