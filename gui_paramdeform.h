@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QTime>
 #include <string>
 #include <vector>
 #include "myimage.h"
@@ -53,10 +54,13 @@ protected:
             return;
 //        mutex.lock();
         if (!stopped){
+            QTime timeObj;
+            timeObj.start();
             warpPtr->calcDelta();
             newImg = warpPtr->genNewImg(oriImg, 1);
             delete warpPtr;
             warpPtr = NULL;
+            qDebug("Warping time: %d", timeObj.elapsed());
         }
         mutex.unlock();
     }

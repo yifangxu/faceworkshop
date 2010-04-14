@@ -10,27 +10,38 @@ Widget_FaceMorph::Widget_FaceMorph(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget_FaceMorph)
 {
-    string appPath = QApplication::applicationDirPath().toStdString();
     ui->setupUi(this);
 //     asmModel.readTrainData((appRoot+"data/feret_shape/pts.list").c_str());
-    string modelPath;
     //modelPath = "/home/chenxing/myProj/aamlib-opencv/data/color_asm68.model";
-    modelPath = appPath + "/data/color_asm75_ascii.model";
-    asmModel.load(modelPath);
+//    modelPath = appPath + "/data/color_asm75_ascii.model";
+//    asmModel.load(modelPath);
 
-    modelPath = appPath + "/data/color_sam68.model";
-    //samModel.load(modelPath);
+    ui->view1->setMode(PhotoView::AdjustingMarkPoints);
+    ui->view2->setMode(PhotoView::AdjustingMarkPoints);
 
     string faceCascadePath=QApplication::applicationDirPath().toStdString() + "/data/haarcascade_frontalface_alt.xml";
     faceCascade.load(faceCascadePath);
 
-    ui->view1->pointPaint.setShapeInfo(&asmModel.getShapeInfo());
-    ui->view2->pointPaint.setShapeInfo(&asmModel.getShapeInfo());
 }
 
 Widget_FaceMorph::~Widget_FaceMorph()
 {
     delete ui;
+}
+
+void Widget_FaceMorph::setASMModel(ASMModel *asmM)
+{
+    this->asmModel = asmM;
+    ui->view1->asmModel = asmM;
+    ui->view2->asmModel = asmM;
+    ui->view1->setShapeInfo(&asmModel->getShapeInfo());
+    ui->view2->setShapeInfo(&asmModel->getShapeInfo());
+}
+
+void Widget_FaceMorph::setFaceClassifier(cv::CascadeClassifier *clas)
+{
+    ui->view1->faceCascade = clas;
+    ui->view2->faceCascade = clas;
 }
 
 void Widget_FaceMorph::changeEvent(QEvent *e)
@@ -48,7 +59,7 @@ void Widget_FaceMorph::changeEvent(QEvent *e)
 void Widget_FaceMorph::loadImg(Mat& imgA, int i)
 {
     img[i] = imgA;
-    asmModel.fit(img[i], fitResV[i], faceCascade, true, 0);
+    asmModel->fit(img[i], fitResV[i], faceCascade, true, 0);
 //    asmModel.showResult(img, fitResult);
 
     MyImage mImg=MyImage::fromMat(img[i]);
@@ -57,7 +68,7 @@ void Widget_FaceMorph::loadImg(Mat& imgA, int i)
     else
         ui->view2->setImage(mImg);
     if (fitResV[i].size()>0){
-        asmModel.resultToPointList(fitResV[i][0], fittedPointV[i]);
+        asmModel->resultToPointList(fitResV[i][0], fittedPointV[i]);
         if (i==0)
             ui->view1->setPointList(getQListQPoint(fittedPointV[i]));
         else
@@ -69,20 +80,20 @@ void Widget_FaceMorph::loadImg(Mat& imgA, int i)
 
 void Widget_FaceMorph::on_btnCapImg1_clicked()
 {
-    GUI_VideoCapture gvc(this);
-    gvc.exec();
-    loadImg(gvc.img, 0);
+//    GUI_VideoCapture gvc(this);
+//    gvc.exec();
+//    loadImg(gvc.img, 0);
 }
 
 void Widget_FaceMorph::on_btnLoadImg2_clicked()
 {
-    QString fileName;
-    fileName = QFileDialog::getOpenFileName(this,
-               tr("Open List file"), "./", tr("Image Files (*.jpg *.png *.ppm);;All Files (*.*)"));
-
-    Mat img;
-    img = cv::imread(fileName.toStdString());
-    loadImg(img, 1);
+//    QString fileName;
+//    fileName = QFileDialog::getOpenFileName(this,
+//               tr("Open List file"), "./", tr("Image Files (*.jpg *.png *.ppm);;All Files (*.*)"));
+//
+//    Mat img;
+//    img = cv::imread(fileName.toStdString());
+//    loadImg(img, 1);
 }
 
 void Widget_FaceMorph::on_btnRender_clicked()
@@ -93,7 +104,7 @@ void Widget_FaceMorph::on_btnRender_clicked()
 //    vector< cv::Point2i > vTar;
 //    FitResult fTar;
 //
-    int vDiv = 100;
+    int vDiv = 10;
     double di;
 //    for (int i=0; i<vDiv; i++){
 //        di = i/(double)vDiv;
@@ -137,20 +148,32 @@ void Widget_FaceMorph::on_btnRender_clicked()
 //        cvWaitKey();
 //    }
 
-    ModelImage m, nm;
-    FitResult res, nres, rest;
+    ModelImage m, nm, nm1;
+    FitResult res, nres, nres1, rest;
 
-    vector< Point2i > v2, nv2;
-    v2.insert(v2.begin(), fittedPointV[0].begin()+7, fittedPointV[0].end());
-    nv2.insert(nv2.begin(), fittedPointV[1].begin()+7, fittedPointV[1].end());
-    nm.loadTrainImage(img[1]);
-    nm.initPointsByVector(v2);
+//    vector< Point2i > v2, nv2;
+//    v2.insert(v2.begin(), fittedPointV[0].begin(), fittedPointV[0].end());
+//    nv2.insert(nv2.begin(), fittedPointV[1].begin(), fittedPointV[1].end());
+    //nm.loadTrainImage(img[1]);
+    //nm.initPointsByVector(nv2);
+    nm.readPTS("/home/chenxing/myProj/aamlib-opencv/data/feret_color/00130_931230_fa.ppm.pts68");
+    nm.loadTrainImage(ui->view2->oriImg);
 
-    m.loadTrainImage(img[0]);
-    m.initPointsByVector(v2);
+    nm1.initPointsByVector(ui->view2->getCurMarkPoints());
+    nm1.loadTrainImage(ui->view2->oriImg);
+
+    m.loadTrainImage(ui->view1->oriImg);
+    m.initPointsByVector(ui->view1->getCurMarkPoints());
 
     res = samModel.getModelParam(m);
     nres = samModel.getModelParam(nm);
+    nres1 = samModel.getModelParam(nm1);
+
+//    samModel.restoreImage(res.params, NULL, NULL, cvSize(300, 300));
+    cv::imshow("tarImg", samModel.restoreImage(nres.params, NULL, NULL, cvSize(300, 300)));
+
+    cv::imshow("tarImg1", samModel.restoreImage(nres1.params, NULL, NULL, cvSize(300, 300)));
+    cv::imshow("srcImg", samModel.restoreImage(res.params, NULL, NULL, cvSize(300, 300)));
 
     for (int i=0; i<vDiv; i++){
         di = i/(double)vDiv;
@@ -164,4 +187,15 @@ void Widget_FaceMorph::on_btnRender_clicked()
     }
 
 //    Mat imgNew = warpObj.genNewImg(mCartoon.getTrainImage(), 1);
+}
+
+void Widget_FaceMorph::on_btnLoadModel_clicked()
+{
+    string appPath = QApplication::applicationDirPath().toStdString();
+    string modelPath;
+    modelPath = appPath + "/data/color_sam68.model";
+    samModel.load(modelPath);
+
+    ui->view1->pointPaint.setShapeInfo(&asmModel->getShapeInfo());
+    ui->view2->pointPaint.setShapeInfo(&asmModel->getShapeInfo());
 }

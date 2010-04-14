@@ -300,3 +300,12 @@ QList< QPoint > getQListQPoint(const vector<cv::Point2i> &V)
         ql.push_back(QPoint(V[i].x, V[i].y));
     return ql;
 }
+
+vector<cv::Point2i> getVcvPoint(const QList< QPoint > &qL)
+{
+    vector<cv::Point2i> vL;
+    foreach (QPoint qp, qL){
+        vL.push_back(cv::Point2i(qp.x(), qp.y()));
+    }
+    return vL;
+}

@@ -14,44 +14,103 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="2">
-    <widget class="PhotoView" name="view1"/>
+   <item row="0" column="2" colspan="4">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>316</width>
+       <height>24</height>
+      </size>
+     </property>
+    </spacer>
    </item>
-   <item row="0" column="2" colspan="2">
-    <widget class="PhotoView" name="view2"/>
+   <item row="1" column="0" colspan="4">
+    <widget class="Widget_FacePhotoView" name="view1"/>
    </item>
-   <item row="1" column="0">
+   <item row="1" column="4" colspan="3">
+    <widget class="Widget_FacePhotoView" name="view2"/>
+   </item>
+   <item row="2" column="0">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>15</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="1">
     <widget class="QPushButton" name="btnLoadImg1">
      <property name="text">
       <string>Load</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="2" column="2">
     <widget class="QPushButton" name="btnCapImg1">
      <property name="text">
       <string>Capture</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
+   <item row="2" column="3">
+    <spacer name="horizontalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>43</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="4">
     <widget class="QPushButton" name="btnLoadImg2">
      <property name="text">
       <string>Load</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="3">
+   <item row="2" column="5">
     <widget class="QPushButton" name="btnCapImg2">
      <property name="text">
       <string>Capture</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="2">
+   <item row="2" column="6">
+    <spacer name="horizontalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>82</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="6">
     <widget class="QPushButton" name="btnRender">
      <property name="text">
       <string>Render</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="btnLoadModel">
+     <property name="text">
+      <string>Load Model...</string>
      </property>
     </widget>
    </item>
@@ -59,18 +118,80 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PhotoView</class>
+   <class>Widget_FacePhotoView</class>
    <extends>QGraphicsView</extends>
-   <header>photoview.h</header>
+   <header>widget_facephotoview.h</header>
    <slots>
-    <signal>selectedPointUpdated(int)</signal>
-    <signal>warpControlUpdated()</signal>
-    <slot>setMirrorPoint(int)</slot>
-    <slot>setImageVisibility(bool)</slot>
-    <slot>setMarkPointVisibility(bool)</slot>
+    <slot>loadImgFromFile()</slot>
+    <slot>loadImgFromCam()</slot>
    </slots>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btnLoadImg1</sender>
+   <signal>clicked()</signal>
+   <receiver>view1</receiver>
+   <slot>loadImgFromFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>97</x>
+     <y>325</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>91</x>
+     <y>262</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnCapImg1</sender>
+   <signal>clicked()</signal>
+   <receiver>view1</receiver>
+   <slot>loadImgFromCam()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>182</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>184</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnLoadImg2</sender>
+   <signal>clicked()</signal>
+   <receiver>view2</receiver>
+   <slot>loadImgFromFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>312</x>
+     <y>329</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnCapImg2</sender>
+   <signal>clicked()</signal>
+   <receiver>view2</receiver>
+   <slot>loadImgFromCam()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>426</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

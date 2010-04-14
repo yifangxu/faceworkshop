@@ -26,6 +26,9 @@ PhotoView::PhotoView(QWidget *parent)
     gScene.addItem(&controlPoints);
     controlPoints.setRatio(this->mapToScene(1, 0).x()-this->mapToScene(0, 0).x());
 
+    gScene.addItem(&oriPointPaint);
+    oriPointPaint.setRatio(this->mapToScene(1, 0).x()-this->mapToScene(0, 0).x());
+
     this->imgVisible = true;
     this->markPointVisible = true;
 
@@ -37,6 +40,7 @@ PhotoView::PhotoView(QWidget *parent)
 PhotoView::~PhotoView()
 {
     gScene.removeItem(&pointPaint);
+    gScene.removeItem(&oriPointPaint);
     gScene.removeItem(&controlPoints);
 }
 
@@ -45,6 +49,7 @@ void PhotoView::zoomIn(){
     this->scale(1.2, 1.2);
     this->setRenderHint(QPainter::SmoothPixmapTransform);
     pointPaint.setRatio(this->mapToScene(1, 0).x()-this->mapToScene(0, 0).x());
+    oriPointPaint.setRatio(this->mapToScene(1, 0).x()-this->mapToScene(0, 0).x());
     controlPoints.setRatio(this->mapToScene(1, 0).x()-this->mapToScene(0, 0).x());
     this->update();
 }
@@ -53,6 +58,8 @@ void PhotoView::zoomOut(){
     scaleFactor /= 1.2;
     this->scale(1/1.2, 1/1.2);
     pointPaint.setRatio(this->mapToScene(1, 0).x()-this->mapToScene(0, 0).x());
+    oriPointPaint.setRatio(this->mapToScene(1, 0).x()-this->mapToScene(0, 0).x());
+    controlPoints.setRatio(this->mapToScene(1, 0).x()-this->mapToScene(0, 0).x());
     this->update();
 }
 
@@ -73,18 +80,18 @@ void PhotoView::mousePressEvent(QMouseEvent *event){
 //            controlPoints.selectPoint(-1);
         }
     }
-    else {
-        int tI = pointPaint.pickPointByMouse(qp);
+    else if (this->curMode = this->AdjustingMarkPoints) {
+        int tI = oriPointPaint.pickPointByMouse(qp);
         if (tI != -1){
-            pointPaint.selectPoint(tI);
+            oriPointPaint.selectPoint(tI);
             emit selectedPointUpdated(tI);
             dragging = true;
         }
-        else {
-            pointPaint.addPoint(qp);
-            pointPaint.selectPoint(-1);
-            emit selectedPointUpdated(pointPaint.getSize());
-        }
+//        else {
+//            pointPaint.addPoint(qp);
+//            pointPaint.selectPoint(-1);
+//            emit selectedPointUpdated(pointPaint.getSize());
+//        }
     }
 
     //QGraphicsView::mousePressEvent(event);
@@ -103,15 +110,15 @@ void PhotoView::mouseMoveEvent(QMouseEvent *event)
         WarpControlSelected wcs = this->controlPoints.pickPointByMouse(qp);
         controlPoints.highLight(wcs);
     }
-    else {
+    else if (this->curMode = this->AdjustingMarkPoints){
         if ( dragging ){
-            pointPaint.updateSelectedPoint(this->mapToScene(event->pos()));
+            oriPointPaint.updateSelectedPoint(this->mapToScene(event->pos()));
             emit pointsUpdated();
             return;
         }
 
-        int tI = pointPaint.pickPointByMouse(qp);
-        pointPaint.highLight(tI);
+        int tI = oriPointPaint.pickPointByMouse(qp);
+        oriPointPaint.highLight(tI);
     }
     QGraphicsView::mouseMoveEvent(event);
 }
@@ -162,6 +169,13 @@ void PhotoView::setPointList(const QList< QPoint > &ql){
     emit pointsUpdated();
 }
 
+void PhotoView::setOriPointList(const QList< QPoint > &ql){
+    oriPointPaint.clear();
+    for (int i=0;i<ql.size();i++)
+        oriPointPaint.addPoint(QPointF(ql[i]));
+    emit pointsUpdated();
+}
+
 void PhotoView::setImageVisibility(bool visible)
 {
     if (pixItem != NULL){
@@ -183,4 +197,7 @@ void PhotoView::setMode(ViewMode mode)
     }
     else
         controlPoints.setVisible(false);
+
+    if (curMode == PhotoView::AdjustingMarkPoints)
+        this->oriPointPaint.setVisible(true);
 }

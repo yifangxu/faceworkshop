@@ -13,17 +13,20 @@ GUI_ParamDeform::GUI_ParamDeform(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GUI_ParamDeform)
 {
-    string appPath = QApplication::applicationDirPath().toStdString();
+    string appPath = QApplication::applicationDirPath().toLocal8Bit().data();
     ui->setupUi(this);
 
     bDeformPic = false;
 //     asmModel.readTrainData((appRoot+"data/feret_shape/pts.list").c_str());
     string modelPath;
-    modelPath = appPath + "/data/color_asm75_ascii.model";
+    modelPath = appPath + "/data/color_asm68_ascii.model";
     asmModel.load(modelPath);
 
     string faceCascadePath= appPath + "/data/haarcascade_frontalface_alt.xml";
     faceCascade.load(faceCascadePath);
+
+    ui->widgetFaceMorph->setASMModel(&asmModel);
+    ui->widgetFaceMorph->setFaceClassifier(&faceCascade);
 
     ui->viewPic->pointPaint.setShapeInfo(&asmModel.getShapeInfo());
 
@@ -66,7 +69,10 @@ void GUI_ParamDeform::on_actionLoadImg_triggered()
 void GUI_ParamDeform::loadImg(Mat& img)
 {
     oriImg = img;
+    QTime timeObj;
+    timeObj.start();
     asmModel.fit(oriImg, fitResV, faceCascade, true, 0);
+    qDebug("ASM Time: %d", timeObj.elapsed());
 //    asmModel.showResult(img, fitResult);
 
     MyImage mImg=MyImage::fromMat(oriImg);

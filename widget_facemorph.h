@@ -15,7 +15,6 @@ public:
     Widget_FaceMorph(QWidget *parent = 0);
     ~Widget_FaceMorph();
 
-    ASMModel asmModel;
     AAMModel samModel;
 
     vector< FitResult > fitResV[2];
@@ -25,6 +24,8 @@ public:
     cv::CascadeClassifier faceCascade;
 
     void loadImg(Mat& img, int i);
+    void setASMModel(ASMModel *asmM);
+    void setFaceClassifier(cv::CascadeClassifier *clas);
 
 protected:
     void changeEvent(QEvent *e);
@@ -32,7 +33,10 @@ protected:
 private:
     Ui::Widget_FaceMorph *ui;
 
+    ASMModel *asmModel;
+
 private slots:
+    void on_btnLoadModel_clicked();
     void on_btnRender_clicked();
     void on_btnLoadImg2_clicked();
     void on_btnCapImg1_clicked();

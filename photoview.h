@@ -24,7 +24,7 @@ public:
     void setImage(const QString & imgFileName);
     void setImage(const QImage & img);
 
-    QList< QPoint > getPointList(){ return pointPaint.getPointList(); }
+//    QList< QPoint > getPointList(){ return pointPaint.getPointList(); }
     QList< WarpControl > getControlPointList(){
         return controlPoints.getControlPointList();
     }
@@ -33,7 +33,10 @@ public:
 
     void setPointList(const QList< QPoint > &ql);
 
-    PointsPaint pointPaint;
+    void setOriPointList(const QList< QPoint > &ql);
+    QList< QPoint > getOriPointList(){ return oriPointPaint.getPointList(); }
+
+    PointsPaint pointPaint, oriPointPaint;
 public slots:
     void setMirrorPoint(int pId);
     void setImageVisibility(bool visible);

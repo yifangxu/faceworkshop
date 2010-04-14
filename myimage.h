@@ -38,4 +38,7 @@ using std::vector;
 // cvPoint list to QList< QPoint >
 QList< QPoint > getQListQPoint(const vector<cv::Point2i> &V);
 
+// QList< QPoint > to cvPoint list
+vector<cv::Point2i> getVcvPoint(const QList< QPoint > &qL);
+
 #endif // MYIMAGE_H

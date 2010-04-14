@@ -29,7 +29,7 @@ void interactiveImageWarping(
                 weight = 0;
             else {
                 cosT = pV.dot(w.warpVec)/(norm(pV)*norm(w.warpVec));
-                weight = exp(-pV.dot(pV)/(pow(1.1,1-cosT)*8000));
+                weight = exp(-pV.dot(pV)/(pow(2,1-cosT)*8000));
             }
 //            printf("%lf\n", weight);
 

@@ -3,8 +3,8 @@
 # -------------------------------------------------
 TARGET = FaceWorkshop
 TEMPLATE = app
-LIBS += ../../aamlib-opencv/src/build/libaam.a \
-    ../../aamlib-opencv/src/build/imgwarp/libimgwarp.a \
+LIBS += ../../../aamlib-opencv/src/build/libaam.a \
+    ../../../aamlib-opencv/src/build/imgwarp/libimgwarp.a \
     -lcxcore \
     -lcv \
     -lhighgui \
@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     imageprocess.cpp \
     gui_videocapture.cpp \
     widget_warpparam.cpp \
-    widget_facemorph.cpp
+    widget_facemorph.cpp \
+    widget_facephotoview.cpp
 HEADERS += gui_paramdeform.h \
     pointspaint.h \
     photoview.h \
@@ -30,12 +31,13 @@ HEADERS += gui_paramdeform.h \
     imageprocess.h \
     gui_videocapture.h \
     widget_warpparam.h \
-    widget_facemorph.h
+    widget_facemorph.h \
+    widget_facephotoview.h
 FORMS += gui_paramdeform.ui \
     widget_modelparamedit.ui \
     gui_videocapture.ui \
     widget_warpparam.ui \
     widget_facemorph.ui
-INCLUDEPATH += ../../aamlib-opencv/src \
-    ../../aamlib-opencv/src/imgwarp \
+INCLUDEPATH += ../../../aamlib-opencv/src \
+    ../../../aamlib-opencv/src/imgwarp \
     /usr/include/opencv
