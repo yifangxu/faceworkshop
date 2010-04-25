@@ -80,7 +80,7 @@ void PhotoView::mousePressEvent(QMouseEvent *event){
 //            controlPoints.selectPoint(-1);
         }
     }
-    else if (this->curMode = this->AdjustingMarkPoints) {
+    else if (this->curMode == this->AdjustingMarkPoints) {
         int tI = oriPointPaint.pickPointByMouse(qp);
         if (tI != -1){
             oriPointPaint.selectPoint(tI);
@@ -110,7 +110,7 @@ void PhotoView::mouseMoveEvent(QMouseEvent *event)
         WarpControlSelected wcs = this->controlPoints.pickPointByMouse(qp);
         controlPoints.highLight(wcs);
     }
-    else if (this->curMode = this->AdjustingMarkPoints){
+    else if (this->curMode == this->AdjustingMarkPoints){
         if ( dragging ){
             oriPointPaint.updateSelectedPoint(this->mapToScene(event->pos()));
             emit pointsUpdated();
