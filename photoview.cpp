@@ -31,6 +31,7 @@ PhotoView::PhotoView(QWidget *parent)
 
     this->imgVisible = true;
     this->markPointVisible = true;
+    controlVisible = true;
 
     this->curMode = Warping;
     //this->fitInView(QRect(QPoint(0, 0), img->size()));

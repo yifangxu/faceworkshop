@@ -30,7 +30,8 @@ GUI_ParamDeform::GUI_ParamDeform(QWidget *parent) :
 
     ui->viewPic->pointPaint.setShapeInfo(&asmModel.getShapeInfo());
 
-    ui->cmbImgWarpAlg->addItem(tr("Piece-Wise Warping"));
+    ui->cmbImgWarpAlg->addItem(tr("Piece-Wise + MLS"));
+    ui->cmbImgWarpAlg->addItem(tr("All Piece-Wise"));
     ui->cmbImgWarpAlg->addItem(tr("MLS Rigid"));
     ui->cmbImgWarpAlg->addItem(tr("MLS Similarity"));
 
@@ -62,7 +63,7 @@ void GUI_ParamDeform::on_actionLoadImg_triggered()
 
     Mat img;
     
-    img = cv::imread(fileName.toStdString());
+    img = cv::imread(fileName.toLocal8Bit().data());
     if (!img.empty())
         loadImg(img);
 }
@@ -95,7 +96,8 @@ void GUI_ParamDeform::updatePic(){
         return;
 //    double fatthinL[]={-0.00358229, 0.0303741, -0.00398948, 0.0422324, 0.0177682, 0.0240675, 0.000506884, 0.00171348, 0.00286941, -0.00348525, -0.00198361, 0.00348873, 0.0010854, 0.00370192, -0.00327463, -0.00684588, 0.0043453, 0.00280502, 0.00170437, 0.000480568, -0.00267232, -0.00214505, 0.002633, 0.000794968, 0.000604818, -0.0031604, -0.000393982, -0.00128753, -0.000211793, 0.00164599, 0.00196191, -0.000473628, 0.00183526, 0.0011174};
 //    double fatthinL[]={-0.0286099, 0.157105, -0.0663111, 6.08284e-05, 0.142057, -0.124677, -0.00403317, 0.0185718, 0.0047351, -0.0421543, 0.00146511, -0.00729767, 0.0145544, 0.0021012, 0.0281285, -0.00719042, -0.00782145, 0.0142164, -0.0126156, -0.0260578, -0.00970037, 0.029682, 0.00464373, -0.0211351, 0.0234257, -0.00962877, 0.00929279, 0.0099329, -0.00408232, -0.00947347, 0.012463, 0.00237411, -0.00995264, 0.00822943, 0.0021841, 0.00224892, 0.00115306, -0.00146569};
-    double fatthinL[]={0.0140596, 0.0160517, 0.0539527, 0.000812555, -0.000752845, 0.00450181, -0.0192521, 0.0196133, 0.0101444, 0.00729279, -0.0162042, -0.0071276, -0.00141391, -0.00201894, -0.00144492, -0.00190538, -0.000497974, -0.00159142, -0.00517663, 0.0056537, 0.00156158, 0.00316443, -0.000180146, -0.00132939, -0.0061002, 0.0010544, 0.000380441, -0.000538201, -0.00398194, -0.00222475, -0.000490223, 0.00116845, 0.000457822, 0.00723525, 0.00514677, 0.00059638, -0.000444628, -0.000535828, -0.00525137, -0.000303542, -0.00199471};
+    double fatthinL[]={0.0040596, 0.0160517, 0.0539527, 0.000812555, -0.000752845, 0.00450181, -0.0192521, 0.0196133, 0.0101444, 0.00729279, -0.0162042, -0.0071276, -0.00141391, -0.00201894, -0.00144492, -0.00190538, -0.000497974, -0.00159142, -0.00517663, 0.0056537, 0.00156158, 0.00316443, -0.000180146, -0.00132939, -0.0061002, 0.0010544, 0.000380441, -0.000538201, -0.00398194, -0.00222475, -0.000490223, 0.00116845, 0.000457822, 0.00723525, 0.00514677, 0.00059638, -0.000444628, -0.000535828, -0.00525137, -0.000303542, -0.00199471};
+    //double fatthinL[]={0.040596, 0.0160517, 0.0039527, 0.000812555, -0.000752845, 0.00450181, -0.0192521, 0.0196133, 0.0101444, 0.00729279, -0.0162042, -0.0071276, -0.00141391, -0.00201894, -0.00144492, -0.00190538, -0.000497974, -0.00159142, -0.00517663, 0.0056537, 0.00156158, 0.00316443, -0.000180146, -0.00132939, -0.0061002, 0.0010544, 0.000380441, -0.000538201, -0.00398194, -0.00222475, -0.000490223, 0.00116845, 0.000457822, 0.00723525, 0.00514677, 0.00059638, -0.000444628, -0.000535828, -0.00525137, -0.000303542, -0.00199471};
 
     vector< cv::Point2i > newPV;
     Mat newImg;
@@ -105,6 +107,7 @@ void GUI_ParamDeform::updatePic(){
     if (processId == 0){
         vector< WarpControl > vC = ui->viewPic->getControlPointList().toVector().toStdVector();
         ui->wWarpParam->processImage(asmModel, vC, fittedPointV, newPV);
+        ui->viewPic->setControlVisibility(ui->wWarpParam->showControl);
     }
     else if (processId == 1){
         Mat_<double> m2=ui->wParamEdit->getParamV().clone();
@@ -130,9 +133,15 @@ void GUI_ParamDeform::updatePic(){
     if (bDeformPic){
         ImgTrans_MLS *warp;
         int imgWarpAlg = ui->cmbImgWarpAlg->currentIndex();
-        if (imgWarpAlg==0)
+        if (imgWarpAlg==0){
             warp = new ImgTransPieceWiseAffine;
-        else if (imgWarpAlg==1)
+            ((ImgTransPieceWiseAffine *) warp)->backGroundFillAlg = ImgTransPieceWiseAffine::BGMLS;
+        }
+        else if (imgWarpAlg==1){
+            warp = new ImgTransPieceWiseAffine;
+            ((ImgTransPieceWiseAffine *) warp)->backGroundFillAlg = ImgTransPieceWiseAffine::BGPieceWise;
+        }
+        else if (imgWarpAlg==2)
             warp = new ImgTrans_MLS_Rigid;
         else
             warp = new ImgTrans_MLS_Similarity;
@@ -220,4 +229,14 @@ void GUI_ParamDeform::on_tabProcessMethod_currentChanged(int index)
         ui->viewPic->setMode(PhotoView::Warping);
     else
         ui->viewPic->setMode(PhotoView::ViewOnly);
+}
+
+void GUI_ParamDeform::on_actionSaveOriImage_triggered()
+{
+    QString fileName;
+    fileName = QFileDialog::getSaveFileName(this,
+               tr("Open List file"), "./", tr("Image Files (*.jpg *.png *.ppm);;All Files (*.*)"));
+
+
+    cv::imwrite(fileName.toLocal8Bit().data(), oriImg);
 }

@@ -40,6 +40,38 @@ void interactiveImageWarping(
     //w.oriPoint
 }
 
+void stepByStepImageWarping(
+        const vector< WarpControl > &controlList,
+        const vector< Point2i > &keyPoints,
+        vector< Point2i > & newPoints)
+{
+    WarpControl w;
+    newPoints = keyPoints;
+    for (uint iw=0; iw<controlList.size(); iw++){
+        w = controlList[iw];
+        for (uint i=0; i<keyPoints.size(); i++){
+            Point2i curP = newPoints[i];
+            Vec2i pV;
+            pV[0] = w.oriPoint.x - curP.x;
+            pV[1] = w.oriPoint.y - curP.y;
+
+            double cosT, weight;
+            if ((w.warpVec[0]==0 && w.warpVec[1]==0)||
+                (pV[0]==0 && pV[1]==0))
+                weight = 0;
+            else {
+                cosT = pV.dot(w.warpVec)/(norm(pV)*norm(w.warpVec));
+                weight = exp(-pV.dot(pV)/(pow(2,1-cosT)*8000));
+            }
+//            printf("%lf\n", weight);
+
+            newPoints[i].x += weight * w.warpVec[0];
+            newPoints[i].y += weight * w.warpVec[1];
+        }
+    }
+    //w.oriPoint
+}
+
 void interactiveStableImageWarping(
         const vector< WarpControl > &controlList,
         const vector< Point2i > &keyPoints,

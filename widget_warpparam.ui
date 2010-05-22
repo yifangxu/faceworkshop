@@ -13,10 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QFormLayout" name="formLayout">
-   <property name="fieldGrowthPolicy">
-    <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-   </property>
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
@@ -34,6 +31,36 @@
      </property>
     </widget>
    </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="chkShowControl">
+     <property name="text">
+      <string>Show Control</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>284</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="btnReset">
+     <property name="text">
+      <string>Reset</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
@@ -45,8 +72,8 @@
    <slot>slotUpdated()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>158</x>
-     <y>91</y>
+     <x>167</x>
+     <y>131</y>
     </hint>
     <hint type="destinationlabel">
      <x>161</x>
@@ -61,12 +88,28 @@
    <slot>slotUpdated()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>272</x>
-     <y>24</y>
+     <x>390</x>
+     <y>56</y>
     </hint>
     <hint type="destinationlabel">
      <x>288</x>
      <y>179</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chkShowControl</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>Widget_WarpParam</receiver>
+   <slot>slotUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>179</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>96</x>
+     <y>216</y>
     </hint>
    </hints>
   </connection>

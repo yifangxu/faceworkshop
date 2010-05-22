@@ -11,7 +11,8 @@ GUI_VideoCapture::GUI_VideoCapture(QWidget *parent) :
     ui->graphicsView->setScene(&gScene);
     int i=0;
     while (i<10){
-        capture.open(i);
+        if (!capture.open(i))
+            break;
         if (!capture.isOpened())
             break;
         QString s;

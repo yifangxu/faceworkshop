@@ -103,6 +103,7 @@ private:
     ThreadWarping threadWarp;
 
 private slots:
+    void on_actionSaveOriImage_triggered();
     void on_tabProcessMethod_currentChanged(int index);
     void on_actionZoom_out_triggered();
     void on_actionZoom_In_triggered();

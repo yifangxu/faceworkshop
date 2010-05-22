@@ -29,6 +29,11 @@ void interactiveImageWarping(
         const vector< Point2i > &keyPoints,
         vector< Point2i > & newPoints);
 
+void stepByStepImageWarping(
+        const vector< WarpControl > &controlList,
+        const vector< Point2i > &keyPoints,
+        vector< Point2i > & newPoints);
+
 void interactiveStableImageWarping(
         const vector< WarpControl > &controlList,
         const vector< Point2i > &keyPoints,

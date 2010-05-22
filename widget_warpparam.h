@@ -19,8 +19,11 @@ public:
                     const vector< WarpControl > &warpControls,
                     const vector< Point2i > &oldPoints,
                     vector< Point2i > &newPoints);
+
+    bool showControl;
 signals:
     void updated();
+    void resetControl();
 
 protected:
     void changeEvent(QEvent *e);
@@ -29,8 +32,9 @@ private:
     Ui::Widget_WarpParam *ui;
 
 private slots:
+    void on_btnReset_clicked();
     void on_chkHumanLike_toggled(bool checked);
-    void slotUpdated(){ emit updated(); }
+    void slotUpdated();
 };
 
 #endif // WIDGET_WARPPARAM_H

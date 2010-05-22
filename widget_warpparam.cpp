@@ -10,8 +10,10 @@ Widget_WarpParam::Widget_WarpParam(QWidget *parent) :
     ui->setupUi(this);
 
     ui->cmbSkeletonWarpAlg->addItem(tr("Cumulative"));
-    ui->cmbSkeletonWarpAlg->addItem(tr("Cumulative Key-Point Accurate"));
+    ui->cmbSkeletonWarpAlg->addItem(tr("Naive Cumulative"));
     ui->cmbSkeletonWarpAlg->addItem(tr("Key-Point Stable"));
+
+    showControl = true;
 }
 
 Widget_WarpParam::~Widget_WarpParam()
@@ -39,10 +41,10 @@ void Widget_WarpParam::processImage(
 {
     int skeletonWarpAlg = ui->cmbSkeletonWarpAlg->currentIndex();
     if (skeletonWarpAlg==0)
-        interactiveImageWarping( warpControls,
+        stepByStepImageWarping( warpControls,
                              oldPoints, newPoints );
     else if (skeletonWarpAlg==1)
-        interactiveStableImageWarping( warpControls,
+        interactiveImageWarping( warpControls,
                              oldPoints, newPoints );
     else
         pointStableImageWarping( warpControls,
@@ -58,5 +60,14 @@ void Widget_WarpParam::processImage(
 
 void Widget_WarpParam::on_chkHumanLike_toggled(bool checked)
 {
+    emit updated();
+}
+
+void Widget_WarpParam::on_btnReset_clicked()
+{
+    emit resetControl();
+}
+void Widget_WarpParam::slotUpdated(){
+    showControl = ui->chkShowControl->isChecked();
     emit updated();
 }

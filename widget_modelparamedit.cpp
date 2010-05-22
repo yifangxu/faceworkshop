@@ -35,6 +35,8 @@ void Widget_ModelParamEdit::setParamV(Mat_<double> &V)
     ui->sldSelectParam->setMaximum(V.rows);
     ui->sldSelectParam->setValue(0);
     this->setEnabled(true);
+    this->curParam = 0;
+    ui->dialParam->setValue(cvRound(paramV(0, 0)*divs));
 }
 
 void Widget_ModelParamEdit::on_sldSelectParam_valueChanged(int value)

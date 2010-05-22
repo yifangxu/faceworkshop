@@ -41,6 +41,8 @@ public slots:
     void setMirrorPoint(int pId);
     void setImageVisibility(bool visible);
     void setMarkPointVisibility(bool visible);
+    void setControlVisibility(bool visible){ this->controlVisible = visible;
+        controlPoints.setVisible(visible);}
 
 signals:
     void selectedPointUpdated(int pId);
@@ -71,6 +73,7 @@ private:
     QPixmap pixData;
 
     bool imgVisible, markPointVisible;
+    bool controlVisible;
 };
 
 #endif // PHOTOVIEW_H
