@@ -266,6 +266,7 @@
     <addaction name="actionLoadImg"/>
     <addaction name="actCapFromCam"/>
     <addaction name="actionSaveOriImage"/>
+    <addaction name="actionExport"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -315,6 +316,11 @@
   <action name="actionSaveOriImage">
    <property name="text">
     <string>Save Ori Image...</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export Picture...</string>
    </property>
   </action>
  </widget>

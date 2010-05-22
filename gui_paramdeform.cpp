@@ -240,3 +240,12 @@ void GUI_ParamDeform::on_actionSaveOriImage_triggered()
 
     cv::imwrite(fileName.toLocal8Bit().data(), oriImg);
 }
+
+void GUI_ParamDeform::on_actionExport_triggered()
+{
+    QString fileName;
+    fileName = QFileDialog::getSaveFileName(this,
+               tr("Open List file"), "./", tr("Image Files (*.jpg *.png *.ppm);;All Files (*.*)"));
+
+    ui->viewPic->exportImage(fileName);
+}

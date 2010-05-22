@@ -24,6 +24,9 @@ public:
     void setImage(const QString & imgFileName);
     void setImage(const QImage & img);
 
+    //! Export the scene to an Image file.
+    void exportImage(const QString & imgFileName);
+
 //    QList< QPoint > getPointList(){ return pointPaint.getPointList(); }
     QList< WarpControl > getControlPointList(){
         return controlPoints.getControlPointList();

@@ -202,3 +202,12 @@ void PhotoView::setMode(ViewMode mode)
     if (curMode == PhotoView::AdjustingMarkPoints)
         this->oriPointPaint.setVisible(true);
 }
+
+//! Export the scene to an Image file.
+void PhotoView::exportImage(const QString & imgFileName)
+{
+    QImage img(gScene.sceneRect().size().toSize(),QImage::Format_ARGB32_Premultiplied);
+    QPainter painter(&img);
+    gScene.render(&painter);
+    img.save(imgFileName);
+}
