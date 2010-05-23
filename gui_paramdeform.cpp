@@ -33,6 +33,7 @@ GUI_ParamDeform::GUI_ParamDeform(QWidget *parent) :
     ui->cmbImgWarpAlg->addItem(tr("Piece-Wise + MLS"));
     ui->cmbImgWarpAlg->addItem(tr("All Piece-Wise"));
     ui->cmbImgWarpAlg->addItem(tr("MLS Rigid"));
+    ui->cmbImgWarpAlg->addItem(tr("MLS Rigid+Scale"));
     ui->cmbImgWarpAlg->addItem(tr("MLS Similarity"));
 
     connect(&threadWarp, SIGNAL(finished()), this, SLOT(showWarpRes()));
@@ -143,6 +144,10 @@ void GUI_ParamDeform::updatePic(){
         }
         else if (imgWarpAlg==2)
             warp = new ImgTrans_MLS_Rigid;
+        else if (imgWarpAlg == 3){
+            warp = new ImgTrans_MLS_Rigid;
+            ((ImgTrans_MLS_Rigid *)warp)->preScale = true;
+        }
         else
             warp = new ImgTrans_MLS_Similarity;
 
@@ -235,7 +240,7 @@ void GUI_ParamDeform::on_actionSaveOriImage_triggered()
 {
     QString fileName;
     fileName = QFileDialog::getSaveFileName(this,
-               tr("Open List file"), "./", tr("Image Files (*.jpg *.png *.ppm);;All Files (*.*)"));
+               tr("Save original image..."), "./", tr("Image Files (*.jpg *.png *.ppm);;All Files (*.*)"));
 
 
     cv::imwrite(fileName.toLocal8Bit().data(), oriImg);
@@ -245,7 +250,7 @@ void GUI_ParamDeform::on_actionExport_triggered()
 {
     QString fileName;
     fileName = QFileDialog::getSaveFileName(this,
-               tr("Open List file"), "./", tr("Image Files (*.jpg *.png *.ppm);;All Files (*.*)"));
+               tr("Export image..."), "./", tr("Image Files (*.jpg *.png *.ppm);;All Files (*.*)"));
 
     ui->viewPic->exportImage(fileName);
 }
