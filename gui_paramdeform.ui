@@ -114,14 +114,14 @@
                  </widget>
                 </item>
                 <item row="4" column="0">
-                 <widget class="QLabel" name="label_5">
+                 <widget class="QLabel" name="label_de">
                   <property name="text">
-                   <string>Pear?</string>
+                   <string>DeID</string>
                   </property>
                  </widget>
                 </item>
                 <item row="4" column="1">
-                 <widget class="QSlider" name="sldParam5">
+                 <widget class="QSlider" name="sldDeidentify">
                   <property name="minimum">
                    <number>-50</number>
                   </property>
@@ -490,6 +490,22 @@
     <hint type="destinationlabel">
      <x>272</x>
      <y>44</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sldDeidentify</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>GUI_ParamDeform</receiver>
+   <slot>updatePic()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>530</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>421</x>
+     <y>392</y>
     </hint>
    </hints>
   </connection>

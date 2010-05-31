@@ -118,7 +118,10 @@ void GUI_ParamDeform::updatePic(){
     else if (processId == 1){
         Mat_<double> m2=ui->wParamEdit->getParamV().clone();
 
+		qDebug("%lf", 1 + double(ui->sldDeidentify->value()) / ui->sldDeidentify->maximum());
+		m2 *= 1 + double(ui->sldDeidentify->value()) / ui->sldDeidentify->maximum();
         for (int i=0; i<38; i++){
+
             m2(i, 0)+=fatthinL[i]*ui->sldFatThin->value()*0.5;
             m2(i, 0)+=eyeSizeL[i]*ui->sldEyeSize->value()*0.15;
         }
