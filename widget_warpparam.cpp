@@ -65,7 +65,8 @@ void Widget_WarpParam::on_chkHumanLike_toggled(bool checked)
 
 void Widget_WarpParam::on_btnReset_clicked()
 {
-    emit resetControl();
+    this->controlPaint->clear();
+    emit updated();
 }
 void Widget_WarpParam::slotUpdated(){
     showControl = ui->chkShowControl->isChecked();

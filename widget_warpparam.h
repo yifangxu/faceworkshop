@@ -2,6 +2,7 @@
 #define WIDGET_WARPPARAM_H
 
 #include <QWidget>
+#include "widget_warpcontrolpaint.h"
 #include "asmmodel.h"
 #include "imageprocess.h"
 
@@ -21,9 +22,10 @@ public:
                     vector< Point2i > &newPoints);
 
     bool showControl;
+    ::Widget_WarpControlPaint *controlPaint;
 signals:
     void updated();
-    void resetControl();
+    //void resetControl();
 
 protected:
     void changeEvent(QEvent *e);

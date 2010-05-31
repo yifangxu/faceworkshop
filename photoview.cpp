@@ -69,16 +69,27 @@ void PhotoView::mousePressEvent(QMouseEvent *event){
 
     // Interactive image warping
     if (this->curMode == PhotoView::Warping){
-        WarpControlSelected wcs = this->controlPoints.pickPointByMouse(qp);
-        if (wcs.controlId != -1){
-            controlPoints.select(wcs);
-            dragging = true;
+        if (event->button() == Qt::RightButton){
+            controlPoints.cancelLast();
+            emit warpControlUpdated();
         }
-        else {
-            qDebug("Adding Point...");
-            controlPoints.addPoint(qp);
-            dragging = true;
-//            controlPoints.selectPoint(-1);
+        // Case 1: Confirm/Cancel the warp
+        if (dragging){
+            dragging = false;
+        }
+        // Case 2: Start warping
+        else if (event->button() == Qt::LeftButton){
+            WarpControlSelected wcs = this->controlPoints.pickPointByMouse(qp);
+            if (wcs.controlId != -1){
+                controlPoints.select(wcs);
+                dragging = true;
+            }
+            else {
+                qDebug("Adding Point...");
+                controlPoints.addPoint(qp);
+                dragging = true;
+    //            controlPoints.selectPoint(-1);
+            }
         }
     }
     else if (this->curMode == this->AdjustingMarkPoints) {
@@ -155,7 +166,9 @@ void PhotoView::setImage(const QImage & img)
 
 void PhotoView::mouseReleaseEvent(QMouseEvent *event)
 {
-    dragging = false;
+    // When interactive warping, mouse can release
+    if (curMode != Warping)
+        dragging = false;
 }
 
 void PhotoView::setMirrorPoint(int pId)

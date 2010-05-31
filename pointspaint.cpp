@@ -100,7 +100,7 @@ void PointsPaint::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
                         j>=ql.size())
                     continue;
                 dPen.setColor(Qt::darkBlue);
-                dPen.setWidth(1);
+                dPen.setWidth(2);
                 painter->setPen(dPen);
                 painter->drawLine(QPointF(ql[shapeInfo->pointInfo[j].connectFrom]),
                          QPointF(ql[j]));

@@ -49,7 +49,7 @@
             <item row="0" column="0" colspan="2">
              <widget class="QTabWidget" name="tabProcessMethod">
               <property name="currentIndex">
-               <number>0</number>
+               <number>1</number>
               </property>
               <widget class="QWidget" name="tab_3">
                <attribute name="title">
@@ -89,12 +89,12 @@
                 <item row="2" column="0">
                  <widget class="QLabel" name="label_3">
                   <property name="text">
-                   <string>Turn</string>
+                   <string>Eye Size</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QSlider" name="sldParam1">
+                 <widget class="QSlider" name="sldEyeSize">
                   <property name="minimum">
                    <number>-50</number>
                   </property>
@@ -452,8 +452,8 @@
    <slot>updatePic()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>740</x>
-     <y>154</y>
+     <x>547</x>
+     <y>137</y>
     </hint>
     <hint type="destinationlabel">
      <x>521</x>
@@ -468,8 +468,8 @@
    <slot>updatePic()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>740</x>
-     <y>194</y>
+     <x>528</x>
+     <y>139</y>
     </hint>
     <hint type="destinationlabel">
      <x>524</x>
@@ -490,6 +490,22 @@
     <hint type="destinationlabel">
      <x>272</x>
      <y>44</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sldEyeSize</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>GUI_ParamDeform</receiver>
+   <slot>updatePic()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>585</x>
+     <y>192</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>734</x>
+     <y>45</y>
     </hint>
    </hints>
   </connection>

@@ -47,6 +47,7 @@ public:
     void setRatio(double r){ ratio = r; }
 
     void clear();
+    void cancelLast();
     void setColorScheme(int schemeId);
 
     QList< WarpControl > getControlPointList() const { return warpCList; }

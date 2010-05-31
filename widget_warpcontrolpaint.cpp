@@ -252,3 +252,10 @@ void Widget_WarpControlPaint::clear()
     boundRect.setCoords(0, 0, 0, 0);
     setZValue(1);
 }
+
+void Widget_WarpControlPaint::cancelLast()
+{
+    if (warpCList.size()>0)
+        warpCList.removeLast();
+    this->update();
+}

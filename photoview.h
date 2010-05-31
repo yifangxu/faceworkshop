@@ -40,6 +40,9 @@ public:
     QList< QPoint > getOriPointList(){ return oriPointPaint.getPointList(); }
 
     PointsPaint pointPaint, oriPointPaint;
+
+    //! View & Data of warp controling points
+    Widget_WarpControlPaint controlPoints;
 public slots:
     void setMirrorPoint(int pId);
     void setImageVisibility(bool visible);
@@ -59,8 +62,6 @@ protected:
 
     QGraphicsScene gScene;
 
-    //! View & Data of warp controling points
-    Widget_WarpControlPaint controlPoints;
 
     // QList< QPoint > selectedPoints;
 
