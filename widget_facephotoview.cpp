@@ -14,7 +14,12 @@ void Widget_FacePhotoView::modelFit()
 {
     QTime timeObj;
     timeObj.start();
-    asmModel->fit(oriImg, fitResV, *faceCascade, true, 0);
+    vector< cv::Rect > faces;
+    faceCascade->detectMultiScale(
+            oriImg, faces,
+            1.2, 2, CV_HAAR_SCALE_IMAGE, Size(60, 60) );
+
+    fitResV = asmModel->fitAll(oriImg, faces, 0);
     qDebug("ASM Time: %d", timeObj.elapsed());
 //    asmModel.showResult(img, fitResult);
 
@@ -23,7 +28,7 @@ void Widget_FacePhotoView::modelFit()
     MyImage mImg=MyImage::fromMat(oriImg);
     setImage(mImg);
     if (fitResV.size()>0){
-        asmModel->resultToPointList(fitResV[0], fittedPointV);
+        fitResV[0].toPointList(fittedPointV);
         setOriPointList(getQListQPoint(fittedPointV));
 //        Mat_<double> m2=asmModel->normalizeParam(fitResV[0].params);
 //        ui->wParamEdit->setParamV(m2);

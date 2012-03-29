@@ -1,7 +1,7 @@
 #include "widget_warpparam.h"
 #include "ui_widget_warpparam.h"
 
-#include "imgtranspiecewiseaffine.h"
+#include "imgwarp_piecewiseaffine.h"
 
 Widget_WarpParam::Widget_WarpParam(QWidget *parent) :
     QWidget(parent),

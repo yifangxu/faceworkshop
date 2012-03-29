@@ -9,6 +9,8 @@ using cv::Vec2i;
 using std::vector;
 
 #include "asmmodel.h"
+using StatModel::ASMModel;
+using StatModel::ASMFitResult;
 
 class WarpControl
 {
@@ -45,7 +47,7 @@ void pointStableImageWarping(
         vector< Point2i > & newPoints);
 
 //! Project a point list to Shape Model, then find the model approximation
-FitResult projectPListToShapeModel(
+ASMFitResult projectPListToShapeModel(
         ASMModel &model,
         const vector< Point2i > &keyPoints,
         vector< Point2i > & newPoints

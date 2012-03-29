@@ -202,16 +202,16 @@ void pointStableImageWarping(
     //w.oriPoint
 }
 
-FitResult projectPListToShapeModel(
+ASMFitResult projectPListToShapeModel(
         ASMModel &model,
         const vector< Point2i > &keyPoints,
         vector< Point2i > & newPoints
         )
 {
-    FitResult fr;
-    ShapeVec sv;
+    ASMFitResult fr(&model);
+    StatModel::ShapeVec sv;
     sv.fromPointList(keyPoints);
     model.findParamForShape(sv, fr);
-    model.resultToPointList(fr, newPoints);
+    fr.toPointList(newPoints);
     return fr;
 }

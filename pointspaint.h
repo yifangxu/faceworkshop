@@ -7,6 +7,7 @@
 #include <QPoint>
 
 #include "shapemodel.h"
+using StatModel::ShapeInfo;
 
 class PointsPaint : public QObject, public QGraphicsItem
 {

@@ -84,7 +84,8 @@ void MyImage::init(){
 
 MyImage MyImage::fromMat(const Mat &m, double mini, double maxi)
 {
-    return fromIplImage(&(const IplImage)m, mini, maxi);
+    const IplImage mImg = m;
+    return fromIplImage(&mImg, mini, maxi);
 }
 
 // Convert IplImage to QImage

@@ -13,11 +13,11 @@ public:
 
     void modelFit();
 
-    vector< FitResult > fitResV;
+    vector< ASMFitResult > fitResV;
     Mat oriImg;
 
     vector< cv::Point2i > getCurMarkPoints(){return getVcvPoint(this->getOriPointList()); }
-    FitResult updatedRes;
+    //ASMFitResult *updatedRes;
 
     ASMModel *asmModel;
     cv::CascadeClassifier *faceCascade;

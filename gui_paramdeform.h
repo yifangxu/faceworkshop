@@ -12,6 +12,10 @@
 using std::string;
 using std::vector;
 #include "asmmodel.h"
+#include "imgwarp_mls_rigid.h"
+
+using StatModel::ASMModel;
+using StatModel::ASMFitResult;
 
 namespace Ui {
     class GUI_ParamDeform;
@@ -30,7 +34,7 @@ public:
         mutex.unlock();
     }
 
-    bool updateWarpPtr(ImgTrans_MLS *wPtr){
+    bool updateWarpPtr(ImgWarp_MLS *wPtr){
         if (!mutex.tryLock())
             return false;
         warpPtr = wPtr;
@@ -68,7 +72,7 @@ private:
     cv::Mat oriImg, newImg;
     QMutex mutex;
     bool stopped;
-    ImgTrans_MLS *warpPtr;
+    ImgWarp_MLS *warpPtr;
 };
 
 class GUI_ParamDeform : public QMainWindow {
@@ -89,7 +93,7 @@ private:
 
     ASMModel asmModel;
 
-    vector< FitResult > fitResV;
+    vector< ASMFitResult > fitResV;
     Mat oriImg;
 
     vector< cv::Point2i > fittedPointV;

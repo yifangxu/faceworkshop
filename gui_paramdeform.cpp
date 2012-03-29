@@ -1,9 +1,10 @@
 #include "gui_paramdeform.h"
 #include "ui_gui_paramdeform.h"
 
-#include "imgtrans_mls_rigid.h"
-#include "imgtrans_mls_similarity.h"
-#include "imgtranspiecewiseaffine.h"
+#include "imgwarp_mls.h"
+#include "imgwarp_mls_rigid.h"
+#include "imgwarp_mls_similarity.h"
+#include "imgwarp_piecewiseaffine.h"
 
 #include "imageprocess.h"
 
@@ -21,13 +22,18 @@ GUI_ParamDeform::GUI_ParamDeform(QWidget *parent) :
 //     asmModel.readTrainData((appRoot+"data/feret_shape/pts.list").c_str());
     string modelPath;
     modelPath = appPath + "/data/grayall_asm.model";
-    asmModel.load(modelPath);
+    cout << "Trying to load model file from: " << modelPath << endl;
+    asmModel.loadFromFile(modelPath);
 
     string faceCascadePath= appPath + "/data/haarcascade_frontalface_alt.xml";
-    faceCascade.load(faceCascadePath);
+    cout << "Trying to load face detector from: " << faceCascadePath << endl;
+    if (!faceCascade.load(faceCascadePath)) {
+        std::cerr << "NO face detector found!!!" << endl;
+    }
 
-    ui->widgetFaceMorph->setASMModel(&asmModel);
-    ui->widgetFaceMorph->setFaceClassifier(&faceCascade);
+    // Removed to remove dependence on SAM.
+    //ui->widgetFaceMorph->setASMModel(&asmModel);
+    //ui->widgetFaceMorph->setFaceClassifier(&faceCascade);
 
     ui->viewPic->pointPaint.setShapeInfo(&asmModel.getShapeInfo());
 
@@ -64,7 +70,7 @@ void GUI_ParamDeform::on_actionLoadImg_triggered()
                tr("Open List file"), "./", tr("Image Files (*.jpg *.png *.ppm);;All Files (*.*)"));
 
     Mat img;
-    
+
     img = cv::imread(fileName.toLocal8Bit().data());
     if (!img.empty()){
         loadImg(img);
@@ -77,14 +83,20 @@ void GUI_ParamDeform::loadImg(Mat& img)
     oriImg = img;
     QTime timeObj;
     timeObj.start();
-    asmModel.fit(oriImg, fitResV, faceCascade, true, 0);
+
+    vector< cv::Rect > faces;
+    faceCascade.detectMultiScale(
+            img, faces,
+            1.2, 2, CV_HAAR_SCALE_IMAGE, Size(60, 60) );
+
+    fitResV = asmModel.fitAll(oriImg, faces, 0);
     qDebug("ASM Time: %d", timeObj.elapsed());
 //    asmModel.showResult(img, fitResult);
 
     MyImage mImg=MyImage::fromMat(oriImg);
     ui->viewPic->setImage(mImg);
     if (fitResV.size()>0){
-        asmModel.resultToPointList(fitResV[0], fittedPointV);
+        fitResV[0].toPointList(fittedPointV);
         ui->viewPic->setPointList(getQListQPoint(fittedPointV));
         Mat_<double> m2=asmModel.normalizeParam(fitResV[0].params);
         ui->wParamEdit->setParamV(m2);
@@ -127,13 +139,13 @@ void GUI_ParamDeform::updatePic(){
         }
 
         fitResV[0].params = asmModel.reConFromNorm(m2);
-        asmModel.resultToPointList(fitResV[0], newPV);
+        fitResV[0].toPointList(newPV);
     }
     else {
         Mat_<double> m2=ui->wParamEdit->getParamV().clone();
 
         fitResV[0].params = asmModel.reConFromNorm(m2);
-        asmModel.resultToPointList(fitResV[0], newPV);
+        fitResV[0].toPointList(newPV);
     }
 //    interactiveStableImageWarping( vC,
 //                             fittedPointV, newPV );
@@ -142,24 +154,24 @@ void GUI_ParamDeform::updatePic(){
     ui->viewPic->setPointList(getQListQPoint(newPV));
 
     if (bDeformPic){
-        ImgTrans_MLS *warp;
+        ImgWarp_MLS *warp;
         int imgWarpAlg = ui->cmbImgWarpAlg->currentIndex();
         if (imgWarpAlg==0){
-            warp = new ImgTransPieceWiseAffine;
-            ((ImgTransPieceWiseAffine *) warp)->backGroundFillAlg = ImgTransPieceWiseAffine::BGMLS;
+            warp = new ImgWarp_PieceWiseAffine;
+            ((ImgWarp_PieceWiseAffine *) warp)->backGroundFillAlg = ImgWarp_PieceWiseAffine::BGMLS;
         }
         else if (imgWarpAlg==1){
-            warp = new ImgTransPieceWiseAffine;
-            ((ImgTransPieceWiseAffine *) warp)->backGroundFillAlg = ImgTransPieceWiseAffine::BGPieceWise;
+            warp = new ImgWarp_PieceWiseAffine;
+            ((ImgWarp_PieceWiseAffine *) warp)->backGroundFillAlg = ImgWarp_PieceWiseAffine::BGPieceWise;
         }
         else if (imgWarpAlg==2)
-            warp = new ImgTrans_MLS_Rigid;
+            warp = new ImgWarp_MLS_Rigid;
         else if (imgWarpAlg == 3){
-            warp = new ImgTrans_MLS_Rigid;
-            ((ImgTrans_MLS_Rigid *)warp)->preScale = true;
+            warp = new ImgWarp_MLS_Rigid;
+            ((ImgWarp_MLS_Rigid *)warp)->preScale = true;
         }
         else
-            warp = new ImgTrans_MLS_Similarity;
+            warp = new ImgWarp_MLS_Similarity;
 
 //        ImgTransPieceWiseAffine warpObj;
         warp->setTargetSize(oriImg.cols, oriImg.rows);
@@ -192,7 +204,7 @@ void GUI_ParamDeform::updatePic(){
 ////    asmModel.resultToPointList(fitResV[0], newPV);
 //    ui->viewPic->setPointList(getQListQPoint(newPV));
 //
-////    ImgTrans_MLS_Rigid warpObj;
+////    ImgWrap_MLS_Rigid warpObj;
 //    if (bDeformPic){
 //        ImgTransPieceWiseAffine warpObj;
 //        warpObj.setTargetSize(oriImg.cols, oriImg.rows);

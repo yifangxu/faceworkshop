@@ -94,17 +94,16 @@ void PointsPaint::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     }
 
     if (shapeInfo != NULL){
-        for (i=0;i<shapeInfo->nPath;i++){
-            for (int j=shapeInfo->pathSeg[i]; j<shapeInfo->pathSeg[i+1]; j++){
-                if (shapeInfo->pointInfo[j].connectFrom>=ql.size() ||
-                        j>=ql.size())
-                    continue;
-                dPen.setColor(Qt::darkBlue);
-                dPen.setWidth(2);
-                painter->setPen(dPen);
-                painter->drawLine(QPointF(ql[shapeInfo->pointInfo[j].connectFrom]),
-                         QPointF(ql[j]));
-            }
+        int nPoints = shapeInfo->pointInfo.size();
+        for (i = 0; i < nPoints; ++i) {
+            if (shapeInfo->pointInfo[i].connectFrom>=ql.size() ||
+                    i>=ql.size())
+                continue;
+            dPen.setColor(Qt::darkBlue);
+            dPen.setWidth(2);
+            painter->setPen(dPen);
+            painter->drawLine(QPointF(ql[shapeInfo->pointInfo[i].connectFrom]),
+                     QPointF(ql[i]));
         }
     }
 }
