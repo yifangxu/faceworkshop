@@ -13,13 +13,14 @@ namespace Ui {
     class GUI_VideoCapture;
 }
 
+//! Asynchrously capturing images from a webcam.
 class ImgCaptureThread : public QThread {
     Q_OBJECT
 public:
-    ImgCaptureThread(){ stopped = false; };
-    ~ImgCaptureThread(){};
+    ImgCaptureThread(){ stopped = false; }
+    ~ImgCaptureThread(){}
 
-    cv::Mat & image(){ return img;};
+    cv::Mat & image(){ return img;}
     VideoCapture *capture;
 
     void stop(){
@@ -33,12 +34,9 @@ protected:
     void run(){
         if (!mutex.tryLock())
             return;
-//        mutex.lock();
         if (!stopped){
             cv::Mat imgT;
-            qDebug("Capturing...");
             (*capture)>>imgT;
-            qDebug("Fliping...");
             cv::flip(imgT, img, 1);
         }
         mutex.unlock();
@@ -49,6 +47,7 @@ private:
     bool stopped;
 };
 
+//! UI for capturing an image from webcam
 class GUI_VideoCapture : public QDialog {
     Q_OBJECT
 public:

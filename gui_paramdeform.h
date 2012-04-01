@@ -21,11 +21,12 @@ namespace Ui {
     class GUI_ParamDeform;
 }
 
+//! Running warping in a separate thread.
 class ThreadWarping : public QThread{
     Q_OBJECT
 public:
-    ThreadWarping(){ stopped = false; };
-    ~ThreadWarping(){};
+    ThreadWarping(){ stopped = false; }
+    ~ThreadWarping(){}
 
     void stop(){
         mutex.lock();
@@ -56,7 +57,6 @@ protected:
     void run(){
         if (!mutex.tryLock())
             return;
-//        mutex.lock();
         if (!stopped){
             QTime timeObj;
             timeObj.start();
@@ -64,7 +64,7 @@ protected:
             newImg = warpPtr->genNewImg(oriImg, 1);
             delete warpPtr;
             warpPtr = NULL;
-            qDebug("Warping time: %d", timeObj.elapsed());
+            qDebug("Warping time: %dms", timeObj.elapsed());
         }
         mutex.unlock();
     }
@@ -75,6 +75,7 @@ private:
     ImgWarp_MLS *warpPtr;
 };
 
+//! Main class for UI
 class GUI_ParamDeform : public QMainWindow {
     Q_OBJECT
 public:

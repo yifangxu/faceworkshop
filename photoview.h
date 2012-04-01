@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QList>
 
+//! Show photos with landmark points.
 class PhotoView : public QGraphicsView
 {
     Q_OBJECT
@@ -27,7 +28,6 @@ public:
     //! Export the scene to an Image file.
     void exportImage(const QString & imgFileName);
 
-//    QList< QPoint > getPointList(){ return pointPaint.getPointList(); }
     QList< WarpControl > getControlPointList(){
         return controlPoints.getControlPointList();
     }
@@ -62,16 +62,12 @@ protected:
 
     QGraphicsScene gScene;
 
-
-    // QList< QPoint > selectedPoints;
-
     double scaleFactor;
 
 private:
     bool dragging;
 
     ViewMode curMode;
-//    QString imageFileName;
 
     QGraphicsPixmapItem *pixItem;
     QPixmap pixData;

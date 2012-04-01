@@ -5,6 +5,7 @@
 #include <cv.h>
 using cv::Mat;
 
+//! Convert images between QImage and OpenCV IplImage and cv::mat
 class MyImage : public QImage
 {
 public:

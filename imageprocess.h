@@ -12,11 +12,17 @@ using std::vector;
 using StatModel::ASMModel;
 using StatModel::ASMFitResult;
 
+//! Free deformation is described by a list WarpControl's.
 class WarpControl
 {
 public:
+    //! A point on (original image)
     Point2i oriPoint;
+
+    //! A deformation vector based on that point.
     Vec2i warpVec;
+
+    //! How much does a point affect its neighbour?
     double r;
 };
 

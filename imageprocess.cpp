@@ -8,6 +8,8 @@ ImageProcess::ImageProcess()
 {
 }
 
+// This file is UGLY... Functions are actually quite similar.
+
 void interactiveImageWarping(
         const vector< WarpControl > &controlList,
         const vector< Point2i > &keyPoints,
@@ -31,13 +33,11 @@ void interactiveImageWarping(
                 cosT = pV.dot(w.warpVec)/(norm(pV)*norm(w.warpVec));
                 weight = exp(-pV.dot(pV)/(pow(2,1-cosT)*8000));
             }
-//            printf("%lf\n", weight);
 
             newPoints[i].x += weight * w.warpVec[0];
             newPoints[i].y += weight * w.warpVec[1];
         }
     }
-    //w.oriPoint
 }
 
 void stepByStepImageWarping(
@@ -63,13 +63,11 @@ void stepByStepImageWarping(
                 cosT = pV.dot(w.warpVec)/(norm(pV)*norm(w.warpVec));
                 weight = exp(-pV.dot(pV)/(pow(2,1-cosT)*8000));
             }
-//            printf("%lf\n", weight);
 
             newPoints[i].x += weight * w.warpVec[0];
             newPoints[i].y += weight * w.warpVec[1];
         }
     }
-    //w.oriPoint
 }
 
 void interactiveStableImageWarping(
@@ -118,7 +116,6 @@ void interactiveStableImageWarping(
                 cosT = pV.dot(w.warpVec)/(norm(pV)*norm(w.warpVec));
                 weight = exp(-pV.dot(pV)/(pow(1.1,1-cosT)*8000));
             }
-//            printf("%lf\n", weight);
 
             if (fabs(vWeaken[iw])>1e-3)
                 weight *= allS/vWeaken[iw];
@@ -127,7 +124,6 @@ void interactiveStableImageWarping(
             newPoints[i].y += weight * w.warpVec[1];
         }
     }
-    //w.oriPoint
 }
 
 void pointStableImageWarping(
@@ -139,6 +135,12 @@ void pointStableImageWarping(
 
     WarpControl w;
     newPoints = keyPoints;
+
+    // If no control object presents, simply return.
+    if (controlList.size() == 0) {
+        return;
+    }
+
     matLx.create(controlList.size(), controlList.size());
     matLy.create(controlList.size(), controlList.size());
     matRy.create(controlList.size(), 1);
